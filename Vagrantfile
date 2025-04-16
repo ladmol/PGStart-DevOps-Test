@@ -15,8 +15,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "debian" do |debian_config|
-    debian_config.vm.box = "debian/bullseye64"
-    debian_config.vm.box_version = "11.20241217.1"
+    debian_config.vm.box = "debian/bookworm64"
+    debian_config.vm.box_version = "12.20250126.1"
     debian_config.vm.hostname = "debian"
     debian_config.vm.network "private_network", ip: "192.168.56.11"
   end
