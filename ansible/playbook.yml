@@ -8,6 +8,10 @@
     - name: Gather OS facts
       setup:
 
+    - name: Check cpu load
+      include_tasks: tasks/get_loadavg.yml
+      tags: loadavg
+
     - name: Install PostgreSQL on AlmaLinux
       include_tasks: tasks/almalinux.yml
       when: ansible_distribution | lower == "almalinux"
