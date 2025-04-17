@@ -1,0 +1,6 @@
+[servers]
+alma ansible_host=192.168.56.10
+debian ansible_host=192.168.56.11
+
+[servers:vars]
+ansible_user=vagrant
