@@ -1,4 +1,4 @@
-- name: Install PostgreSQL 13 from official repositories
+- name: Install PostgreSQL 17 from official repositories
   hosts: all
   become: true
   vars:
@@ -9,69 +9,11 @@
       setup:
 
     - name: Install PostgreSQL on AlmaLinux
-      block:
-        - name: Import PostgreSQL RPM key
-          rpm_key:
-            state: present
-            key: https://ftp.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-RHEL
-
-        - name: Add PostgreSQL Yum repo
-          dnf:
-            name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
-            state: present
-
-        - name: Disable built-in PostgreSQL module
-          command: dnf -qy module disable postgresql
-
-        - name: Install PostgreSQL
-          dnf:
-            name:
-              - "postgresql{{ postgres_version }}"
-              - "postgresql{{ postgres_version }}-server"
-            state: present
-
-        - name: Initialize PostgreSQL database
-          command: "/usr/pgsql-{{ postgres_version }}/bin/postgresql-{{ postgres_version }}-setup initdb"
-          args:
-            creates: "/var/lib/pgsql/{{ postgres_version }}/data/PG_VERSION"
-
-        - name: Start and enable PostgreSQL
-          service:
-            name: "postgresql-{{ postgres_version }}"
-            state: started
-            enabled: true
-
+      include_tasks: tasks/almalinux.yml
       when: ansible_distribution | lower == "almalinux"
+      tags: alma_install
 
     - name: Install PostgreSQL on Debian
-      block:
-        - name: Ensure gnupg is installed (for apt_key)
-          apt:
-            name: gnupg
-            state: present
-            update_cache: yes
-            
-        - name: Add PostgreSQL key
-          apt_key:
-            url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
-            state: present
-
-        - name: Add PostgreSQL APT repository
-          apt_repository:
-            repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
-            state: present
-            filename: "pgdg"
-
-        - name: Install PostgreSQL on Debian
-          apt:
-            name: "postgresql-{{ postgres_version }}"
-            state: present
-            update_cache: yes
-
-        - name: Start and enable PostgreSQL
-          service:
-            name: postgresql
-            state: started
-            enabled: true
-
+      include_tasks: tasks/debian.yml
       when: ansible_os_family == "Debian"
+      tags: alma_install

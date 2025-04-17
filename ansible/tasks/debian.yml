@@ -1,0 +1,28 @@
+- name: Ensure gnupg is installed (for apt_key)
+  apt:
+    name: gnupg
+    state: present
+    update_cache: yes
+
+- name: Add PostgreSQL key
+  apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state: present
+
+- name: Add PostgreSQL APT repository
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
+    state: present
+    filename: "pgdg"
+
+- name: Install PostgreSQL on Debian
+  apt:
+    name: "postgresql-{{ postgres_version }}"
+    state: present
+    update_cache: yes
+
+- name: Start and enable PostgreSQL
+  service:
+    name: postgresql
+    state: started
+    enabled: true
