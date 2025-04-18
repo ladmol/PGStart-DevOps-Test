@@ -23,6 +23,9 @@
   args:
     creates: "/var/lib/pgsql/{{ postgres_version }}/data/PG_VERSION"
 
+- name: Allow external connections
+  include_tasks: allow_external_connections.yml
+
 - name: Start and enable PostgreSQL
   service:
     name: "postgresql-{{ postgres_version }}"

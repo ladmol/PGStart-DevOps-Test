@@ -1,0 +1,6 @@
+- name: Allow all external connections in pg_hba.conf (IPv4 + IPv6)
+  blockinfile:
+    path: "{{ __postgresql_config_path }}/pg_hba.conf"
+    block: |
+      host    all             all             0.0.0.0/0               scram-sha-256
+      host    all             all             ::/0                    scram-sha-256
