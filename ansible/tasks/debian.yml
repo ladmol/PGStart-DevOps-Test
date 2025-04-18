@@ -4,10 +4,21 @@
     state: present
     update_cache: yes
 
-- name: Add PostgreSQL key
-  apt_key:
+- name: Add PostgreSQL GPG key
+  get_url:
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    dest: /etc/apt/keyrings/postgresql.gpg
+    mode: "0644"
+
+- name: Install ntpdate
+  apt:
+    name: ntpdate
     state: present
+
+- name: Sync system time
+  become: true
+  ansible.builtin.command: ntpdate time.google.com
+  when: ansible_date_time.date is defined # to avoid in check mode
 
 - name: Add PostgreSQL APT repository
   apt_repository:
