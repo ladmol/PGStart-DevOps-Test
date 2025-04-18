@@ -1,32 +1,30 @@
-- name: Install PostgreSQL on AlmaLinux
-  block:
-    - name: Import PostgreSQL RPM key
-      rpm_key:
-        state: present
-        key: https://ftp.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-RHEL
+- name: Import PostgreSQL RPM key
+  rpm_key:
+    state: present
+    key: https://ftp.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-RHEL
 
-    - name: Add PostgreSQL Yum repo
-      dnf:
-        name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
-        state: present
+- name: Add PostgreSQL Yum repo
+  dnf:
+    name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+    state: present
 
-    - name: Disable built-in PostgreSQL module
-      command: dnf -qy module disable postgresql
+- name: Disable built-in PostgreSQL module
+  command: dnf -qy module disable postgresql
 
-    - name: Install PostgreSQL
-      dnf:
-        name:
-          - "postgresql{{ postgres_version }}"
-          - "postgresql{{ postgres_version }}-server"
-        state: present
+- name: Install PostgreSQL
+  dnf:
+    name:
+      - "postgresql{{ postgres_version }}"
+      - "postgresql{{ postgres_version }}-server"
+    state: present
 
-    - name: Initialize PostgreSQL database
-      command: "/usr/pgsql-{{ postgres_version }}/bin/postgresql-{{ postgres_version }}-setup initdb"
-      args:
-        creates: "/var/lib/pgsql/{{ postgres_version }}/data/PG_VERSION"
+- name: Initialize PostgreSQL database
+  command: "/usr/pgsql-{{ postgres_version }}/bin/postgresql-{{ postgres_version }}-setup initdb"
+  args:
+    creates: "/var/lib/pgsql/{{ postgres_version }}/data/PG_VERSION"
 
-    - name: Start and enable PostgreSQL
-      service:
-        name: "postgresql-{{ postgres_version }}"
-        state: started
-        enabled: true
+- name: Start and enable PostgreSQL
+  service:
+    name: "postgresql-{{ postgres_version }}"
+    state: started
+    enabled: true
