@@ -1,0 +1,2 @@
+# pg_hba.conf 
+__postgresql_config_path: "/etc/postgresql/{{ postgres_version }}/main"

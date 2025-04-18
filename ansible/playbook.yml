@@ -8,6 +8,9 @@
     - name: Gather OS facts
       setup:
 
+    - name: Include OS-specific variables
+      include_tasks: tasks/variables.yml
+
     - name: Check cpu load
       include_tasks: tasks/get_loadavg.yml
       tags: loadavg
