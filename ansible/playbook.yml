@@ -19,5 +19,5 @@
 
     - name: Install PostgreSQL on Debian
       include_tasks: tasks/debian.yml
-      when: ansible_os_family == "Debian"
-      tags: alma_install
+      when: ansible_distribution | lower == "debian"
+      tags: debian_install
