@@ -32,6 +32,12 @@
     state: present
     update_cache: yes
 
+- name: Initialize PostgreSQL database
+  become: true
+  command: "/usr/lib/postgresql/{{ postgres_version }}/bin/initdb"
+  args:
+    creates: "/var/lib/postgresql/{{ postgres_version }}/main/PG_VERSION"
+
 - name: Allow external connections
   include_tasks: allow_external_connections.yml
 
