@@ -1,3 +1,11 @@
+# - name: Install ntpdate
+#   apt:
+#     name: ntpdate
+#     state: present
+
+# - name: Sync time with time.google.com
+#   command: ntpdate -u time.google.com
+
 - name: Ensure gnupg is installed (for apt_key)
   apt:
     name: gnupg
@@ -31,11 +39,16 @@
     name: python3-psycopg2=2.9.10-1.pgdg120+1
     state: present
 
-- name: Allow external connections
-  include_tasks: allow_external_connections.yml
-
 - name: Start and enable PostgreSQL
   service:
     name: postgresql
     state: started
     enabled: true
+
+- name: Allow external connections
+  include_tasks: allow_external_connections.yml
+
+- name: Restart PostgreSQL to apply config changes
+  ansible.builtin.service:
+    name: postgresql
+    state: restarted

@@ -23,11 +23,22 @@
   args:
     creates: "/var/lib/pgsql/{{ postgres_version }}/data/PG_VERSION"
 
+- name: Install python3-psycopg2 version 2.9.10
+  dnf:
+    name: python3-psycopg2-2.9.10
+    state: present
+
+- name: Start and enable PostgreSQL
+  service:
+    name: "postgresql-{{ postgres_version }}"
+    state: started
+    enabled: true
+
 - name: Allow external connections
   include_tasks: allow_external_connections.yml
 
 - name: Start and enable PostgreSQL
   service:
     name: "postgresql-{{ postgres_version }}"
-    state: started
+    state: restarted
     enabled: true
