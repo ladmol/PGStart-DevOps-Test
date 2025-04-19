@@ -13,20 +13,28 @@
     db: postgres
     login_user: postgres
     login_password: postgres
+    login_host: 127.0.0.1
     query: "DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'student') THEN CREATE USER student WITH PASSWORD 'student'; END IF; END $$;"
 
-
-- name: Allow 'student' user to connect only from IP 192.168.56.11
+- name: Allow 'student' user to connect only from IP
   community.postgresql.postgresql_pg_hba:
     dest: "{{ __postgrsql_pg_hba_conf_path }}"
     contype: host
     users: student
-    address: 192.168.56.11/32
+    address: "{{ postres_allow_student_connect_from }}/32"
     method: md5
-    databases: all
+    databases: postgres
 
 - name: Start and enable PostgreSQL
-  service:
+  systemd_service:
     name: "postgresql-{{ postgres_version }}"
     state: restarted
     enabled: true
+  when: ansible_distribution | lower == "almalinux"
+
+- name: Start and enable PostgreSQL
+  systemd_service:
+    name: "postgresql"
+    state: restarted
+    enabled: true
+  when: ansible_distribution | lower == "debian"

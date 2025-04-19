@@ -5,6 +5,21 @@
     line: "listen_addresses = '*'"
     state: present
 
+- name: Start and enable PostgreSQL
+  systemd_service:
+    name: "postgresql-{{ postgres_version }}"
+    state: restarted
+    enabled: true
+  when: ansible_distribution | lower == "almalinux"
+
+- name: Start and enable PostgreSQL
+  systemd_service:
+    name: "postgresql"
+    state: restarted
+    enabled: true
+  when: ansible_distribution | lower == "debian"
+
+
 - name: Allow all external connections in pg_hba.conf (IPv4 + IPv6)
   blockinfile:
     path: "{{ __postgrsql_pg_hba_conf_path }}"
@@ -12,3 +27,17 @@
       local   all             all                                     md5
       host    all             all             0.0.0.0/0               md5
       host    all             all             ::/0                    md5
+
+- name: Start and enable PostgreSQL
+  systemd_service:
+    name: "postgresql-{{ postgres_version }}"
+    state: restarted
+    enabled: true
+  when: ansible_distribution | lower == "almalinux"
+
+- name: Start and enable PostgreSQL
+  systemd_service:
+    name: "postgresql"
+    state: restarted
+    enabled: true
+  when: ansible_distribution | lower == "debian"
