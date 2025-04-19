@@ -142,8 +142,8 @@ def main():
         inventory={
             'all': {
                 'hosts': {
-                    ip1: {"ansible_user": "vagrant", "ansible_ssh_common_args": "-o StrictHostKeyChecking=no"},
-                    ip2: {"ansible_user": "vagrant",
+                    ip1: {"ansible_user": "root", "ansible_ssh_common_args": "-o StrictHostKeyChecking=no"},
+                    ip2: {"ansible_user": "root",
                           "ansible_ssh_common_args": "-o StrictHostKeyChecking=no"}
                 }
             }
