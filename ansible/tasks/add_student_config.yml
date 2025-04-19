@@ -8,6 +8,11 @@
 #     login_user: postgres
 #     login_password: postgres
 
+
+- name: Set password for postgres user
+  shell: "sudo -u postgres psql -c \"ALTER USER postgres WITH PASSWORD 'postgres';\""
+  become: true
+
 - name: Create user "student" with password
   community.postgresql.postgresql_query:
     db: postgres

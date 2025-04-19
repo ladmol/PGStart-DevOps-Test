@@ -1,7 +1,0 @@
-- name: Check cpu load
-  shell: uptime | awk -F 'load average:' '{print $2}' | awk -F ', ' '{print $1}'
-  register: cpu_load
-
-- name: Register loadavg for later processing
-  debug:
-    msg: "Server {{ inventory_hostname }} has loadavg of{{ cpu_load.stdout }}"

@@ -11,10 +11,6 @@
     - name: Include OS-specific variables
       include_tasks: tasks/variables.yml
 
-    - name: Check cpu load
-      include_tasks: tasks/get_loadavg.yml
-      tags: loadavg
-
     - name: Install PostgreSQL on AlmaLinux
       include_tasks: tasks/almalinux.yml
       when: ansible_distribution | lower == "almalinux" and max_load  == "almalinux"
