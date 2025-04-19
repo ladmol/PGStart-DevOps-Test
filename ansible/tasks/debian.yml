@@ -34,9 +34,11 @@
   args:
     creates: "/var/lib/postgresql/{{ postgres_version }}/main/PG_VERSION"
 
-- name: Install psycopg2
+- name: Install psycopg2 and pip
   apt:
-    name: python3-psycopg2=2.9.10-1.pgdg120+1
+    name: 
+    - python3-psycopg2=2.9.10-1.pgdg120+1
+    - python3-pip
     state: present
 
 - name: Start and enable PostgreSQL

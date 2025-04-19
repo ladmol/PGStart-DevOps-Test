@@ -23,9 +23,12 @@
   args:
     creates: "/var/lib/pgsql/{{ postgres_version }}/data/PG_VERSION"
 
-- name: Install python3-psycopg2 version 2.9.10
+
+- name: Install python3-psycopg2 version 2.9.10 and pip
   dnf:
-    name: python3-psycopg2-2.9.10
+    name: 
+    - python3-psycopg2-2.9.10
+    - python3-pip
     state: present
 
 - name: Start and enable PostgreSQL

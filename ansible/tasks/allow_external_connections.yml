@@ -9,6 +9,20 @@
   blockinfile:
     path: "{{ __postgrsql_pg_hba_conf_path }}"
     block: |
-      local   all             all                                     md5
+      local   all             all             127.0.0.1               md5
       host    all             all             0.0.0.0/0               md5
       host    all             all             ::/0                    md5
+
+- name: Start and enable PostgreSQL
+  systemd_service:
+    name: "postgresql-{{ postgres_version }}"
+    state: restarted
+    enabled: true
+  when: ansible_distribution | lower == "almalinux"
+
+- name: Start and enable PostgreSQL
+  systemd_service:
+    name: "postgresql"
+    state: restarted
+    enabled: true
+  when: ansible_distribution | lower == "debian"
