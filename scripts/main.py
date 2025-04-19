@@ -67,7 +67,15 @@ def connect_ssh(ip, username='vagrant', port=22):
         print(f"Failed to connect to {ip}: {str(e)}")
         exit(1)
 
-
+def get_distro(ssh_client):
+    """Retrieve and return the distro name in lowercase from the remote server (e.g., 'debian' or 'almalinux')."""
+    _, stdout, _ = ssh_client.exec_command("cat /etc/os-release")
+    os_release_content = stdout.read().decode()
+    for line in os_release_content.splitlines():
+        if line.startswith("ID="):
+            distro = line.split('=')[1].strip().replace('"', '').lower()
+            return distro
+    return ""
 
 def delete_temp_file(file_path):
     """Delete a temporary file"""
@@ -90,6 +98,12 @@ def main():
     # Connect to servers and get load average
     ssh_client1 = connect_ssh(ip1)
     ssh_client2 = connect_ssh(ip2)
+
+    ssh_client1_distribution = get_distro(ssh_client1)
+    ssh_client2_distribution = get_distro(ssh_client2)
+
+    print(f"Distribution for {ip1}: {ssh_client1_distribution}")
+    print(f"Distribution for {ip2}: {ssh_client2_distribution}") 
     
     load_avg1 = None
     load_avg2 = None
