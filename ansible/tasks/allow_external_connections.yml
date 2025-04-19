@@ -9,6 +9,6 @@
   blockinfile:
     path: "{{ __postgrsql_pg_hba_conf_path }}"
     block: |
-      local   all             all                                     trust
-      host    all             all             0.0.0.0/0               trust
-      host    all             all             ::/0                    trust
+      local   all             all                                     md5
+      host    all             all             0.0.0.0/0               md5
+      host    all             all             ::/0                    md5
