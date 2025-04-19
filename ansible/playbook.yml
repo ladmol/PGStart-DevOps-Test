@@ -1,0 +1,38 @@
+- name: Install PostgreSQL 17 from official repositories
+  hosts: all
+  become: true
+  vars:
+    postgres_version: 17
+
+  tasks:
+    - name: Gather OS facts
+      setup:
+
+    - name: Include OS-specific variables
+      include_tasks: tasks/variables.yml
+
+    - name: Install PostgreSQL on AlmaLinux
+      include_tasks: tasks/almalinux.yml
+      when: ansible_distribution | lower == "almalinux" and max_load  == "almalinux"
+      tags: alma_install
+
+    - name: Install PostgreSQL on Debian
+      include_tasks: tasks/debian.yml
+      when: ansible_distribution | lower == "debian" and max_load  == "debian"
+      tags: debian_install
+
+    - name: Allow external connections
+      include_tasks: tasks/allow_external_connections.yml
+      when: ansible_distribution | lower == "almalinux" and max_load  == "almalinux"
+
+    - name : Allow external connections
+      include_tasks: tasks/allow_external_connections.yml
+      when: ansible_distribution | lower == "debian" and max_load  == "debian"
+
+    - name: Allow 'student' user to connect only from IP
+      include_tasks: tasks/add_student_config.yml
+      when: ansible_distribution | lower == "almalinux" and max_load  == "almalinux"
+
+    - name: Allow 'student' user to connect only from IP
+      include_tasks: tasks/add_student_config.yml
+      when: ansible_distribution | lower == "debian" and max_load  == "debian"

@@ -1,0 +1,28 @@
+- name: Allow connections from all IPs
+  lineinfile:
+    path: "{{ __postgresql_config_path }}/postgresql.conf"
+    regexp: '^#?listen_addresses\s*='
+    line: "listen_addresses = '*'"
+    state: present
+
+- name: Allow all external connections in pg_hba.conf (IPv4 + IPv6)
+  blockinfile:
+    path: "{{ __postgrsql_pg_hba_conf_path }}"
+    block: |
+      local   all             all             127.0.0.1               md5
+      host    all             all             0.0.0.0/0               md5
+      host    all             all             ::/0                    md5
+
+- name: Start and enable PostgreSQL
+  systemd_service:
+    name: "postgresql-{{ postgres_version }}"
+    state: restarted
+    enabled: true
+  when: ansible_distribution | lower == "almalinux"
+
+- name: Start and enable PostgreSQL
+  systemd_service:
+    name: "postgresql"
+    state: restarted
+    enabled: true
+  when: ansible_distribution | lower == "debian"
