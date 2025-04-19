@@ -4,27 +4,15 @@
     state: present
     update_cache: yes
 
-- name: Add PostgreSQL GPG key
-  get_url:
+- name: add debian postgresql repository
+  template:
+    src: "deb_repo.list.j2"
+    dest: "/etc/apt/sources.list.d/pgdg.list"
+
+- name: add posgresql repository key
+  apt_key:
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
-    dest: /etc/apt/keyrings/postgresql.gpg
-    mode: "0644"
-
-- name: Install ntpdate
-  apt:
-    name: ntpdate
     state: present
-
-- name: Sync system time
-  become: true
-  ansible.builtin.command: ntpdate time.google.com
-  when: ansible_date_time.date is defined # to avoid in check mode
-
-- name: Add PostgreSQL APT repository
-  apt_repository:
-    repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
-    state: present
-    filename: "pgdg"
 
 - name: Install PostgreSQL on Debian
   apt:
@@ -37,6 +25,11 @@
   command: "/usr/lib/postgresql/{{ postgres_version }}/bin/initdb"
   args:
     creates: "/var/lib/postgresql/{{ postgres_version }}/main/PG_VERSION"
+
+- name: Install psycopg2
+  apt:
+    name: python3-psycopg2=2.9.10-1.pgdg120+1
+    state: present
 
 - name: Allow external connections
   include_tasks: allow_external_connections.yml
