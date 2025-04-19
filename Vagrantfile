@@ -2,6 +2,10 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 2048
+  end
+  
   config.ssh.private_key_path = "~/.ssh/id_ed25519"
   config.vm.provision "file", source: "~/.ssh/id_ed25519.pub", destination: "~/.ssh/authorized_keys"
   config.ssh.private_key_path = ["~/.ssh/id_ed25519", "~/.vagrant.d/insecure_private_key"]

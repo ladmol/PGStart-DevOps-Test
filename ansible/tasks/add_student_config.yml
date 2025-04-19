@@ -1,0 +1,32 @@
+# - name: Ensure user 'student' exists with password
+#   community.postgresql.postgresql_user:
+#     name: student
+#     password: "{{ 'student' | ansible.builtin.password_hash('md5') }}"
+#     encrypted: yes
+#     db: postgres
+#     login_host: localhost
+#     login_user: postgres
+#     login_password: postgres
+
+- name: Create user "student" with password
+  community.postgresql.postgresql_query:
+    db: postgres
+    login_user: postgres
+    login_password: postgres
+    query: "DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'student') THEN CREATE USER student WITH PASSWORD 'student'; END IF; END $$;"
+
+
+- name: Allow 'student' user to connect only from IP 192.168.56.11
+  community.postgresql.postgresql_pg_hba:
+    dest: "{{ __postgrsql_pg_hba_conf_path }}"
+    contype: host
+    users: student
+    address: 192.168.56.11/32
+    method: md5
+    databases: all
+
+- name: Start and enable PostgreSQL
+  service:
+    name: "postgresql-{{ postgres_version }}"
+    state: restarted
+    enabled: true
